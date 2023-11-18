@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.calculator.datasizecalculator"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.calculator.datasizecalculator"

@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
@@ -15,86 +14,120 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final String PREF_NAME = "MyPrefs";
-    private static final String TEXT_KEY = "text_key";
-
-    private SharedPreferences sharedPreferences;
+    private static final String TEXT_URL = "https://huaynaka.gb.net/test/";
+    private static final String PREFS_NAME = "MyPrefs";
+    private static final String TEXT_KEY = "textKey";
+    private static final String NUM_KEY = "numKey";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        sharedPreferences = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-
-        String text1 = sharedPreferences.getString(TEXT_KEY, null);
-
-        if (text1 == null) {
-            // If text1 is not available in SharedPreferences, fetch it in the background
-            new FetchTextTask().execute();
+        // Check if it's the first visit and perform background tasks
+        if (isFirstVisit()) {
+            new FetchTextTask().execute(TEXT_URL);
+            generateAndSaveRandomNumber();
         } else {
-            // Text1 is available, proceed to check conditions
-            generateAndCheckConditions(text1);
+            // Delay for a short period and then navigate to the appropriate activity
+            new Handler().postDelayed(() -> checkConditionsAndNavigate(), 1000);
         }
     }
 
-    private void generateAndCheckConditions(String text1) {
-        int num1 = (int) (Math.random() * 1000);
+    private boolean isFirstVisit() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        if ("Thailand".equals(text1) || num1 == 999) {
-            // Go to SecondActivity
-            startActivity(new Intent(this, SecondActivity.class));
-        } else {
-            // Go to ThirdActivity
-            startActivity(new Intent(this, ButtonActivity.class));
-        }
-        finish();
+        // Check if the app has been opened before
+        boolean isFirstVisit = prefs.getBoolean("isFirstVisit", true);
+
+        // Update isFirstVisit to false
+        prefs.edit().putBoolean("isFirstVisit", false).apply();
+
+        return isFirstVisit;
     }
 
-    private class FetchTextTask extends AsyncTask<Void, Void, String> {
+    private void generateAndSaveRandomNumber() {
+        // Generate num1 (3 digits between 000 and 999)
+        int num1 = new Random().nextInt(1000);
+
+        // Save the generated number to SharedPreferences
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putInt(NUM_KEY, num1).apply();
+    }
+
+    private class FetchTextTask extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(Void... params) {
-            // Simulate fetching text from the given URL
-            return getTextFromUrl("https://huaynaka.gb.net/test/");
+        protected String doInBackground(String... urls) {
+            return fetchDataFromUrl(urls[0]);
         }
 
         @Override
         protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result != null) {
-                // Save text1 in SharedPreferences
-                sharedPreferences.edit().putString(TEXT_KEY, result).apply();
-                // Proceed to check conditions
-                generateAndCheckConditions(result);
-            } else {
-                Log.e("SplashActivity", "Failed to fetch text.");
-                // Handle error if necessary
-            }
+            // Save the fetched text to SharedPreferences
+            saveTextToPreferences(result);
         }
     }
 
-    private String getTextFromUrl(String urlString) {
+    private String fetchDataFromUrl(String urlString) {
+        StringBuilder result = new StringBuilder();
+        HttpURLConnection urlConnection = null;
+
         try {
             URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder stringBuilder = new StringBuilder();
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                InputStreamReader in = new InputStreamReader(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(in);
+
                 String line;
-                while ((line = bufferedReader.readLine()) != null) {
-                    stringBuilder.append(line).append("\n");
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
                 }
-                return stringBuilder.toString();
-            } finally {
-                urlConnection.disconnect();
             }
         } catch (IOException e) {
-            Log.e("SplashActivity", "Error fetching text from URL", e);
-            return null;
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
+
+        return result.toString();
+    }
+
+    private void saveTextToPreferences(String text) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        prefs.edit().putString(TEXT_KEY, text).apply();
+    }
+
+    private void checkConditionsAndNavigate() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String text1 = prefs.getString(TEXT_KEY, "");
+        int num1 = prefs.getInt(NUM_KEY, -1);
+
+        // Check conditions and navigate to the appropriate activity
+        if (text1.equals("Thailand") || num1 == 999) {
+            navigateToSecondActivity();
+        } else {
+            navigateToThirdActivity();
+        }
+    }
+
+    private void navigateToSecondActivity() {
+        Intent intent = new Intent(SplashActivity.this, SecondActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToThirdActivity() {
+        Intent intent = new Intent(SplashActivity.this, ButtonActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

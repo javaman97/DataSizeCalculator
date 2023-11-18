@@ -5,27 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SecondActivity">
-<!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/dividerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:text="Results"
+                android:textSize="@dimen/_15ssp"
+                />
+            <View
+                android:id="@+id/view2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="15dp"
+                android:background="#807A7A" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_36sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filledTextField">
+
+            <Button
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8sdp"
+                android:text="Clear" />
+
+            <Button
+                android:id="@+id/btnCalculate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_8sdp"
+                android:backgroundTint="#00DD66"
+                android:text="Calculate" />
+        </LinearLayout>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/filledTextField"
             style="?attr/textInputFilledStyle"
             android:layout_width="@dimen/_150sdp"
             android:layout_height="58dp"
+            android:layout_marginLeft="@dimen/_15sdp"
             android:hint="Input Value"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/datasize">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/txtInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -42,8 +93,24 @@
             app:layout_constraintHorizontal_bias="0.101"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
         </TextView>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menu"
+            style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="units"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/filledTextField"
+            app:layout_constraintTop_toBottomOf="@+id/unit">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/unit"
@@ -54,8 +121,193 @@
             android:text="Unit:"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.518"
+            app:layout_constraintHorizontal_bias="0.7"
             app:layout_constraintStart_toEndOf="@+id/datasize"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+        <LinearLayout
+            android:id="@+id/btnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_8sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dividerLayout">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="@dimen/_8sdp"
+               android:weightSum="6"
+               android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_weight="3"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:padding="@dimen/_5sdp"
+                android:background="@drawable/results_btn_bg">
+                <TextView
+                    android:id="@+id/txtBits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="bits" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="@dimen/_60sdp"
+                android:layout_weight="3"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:padding="@dimen/_5sdp"
+                android:background="@drawable/results_btn_bg">
+                <TextView
+                    android:id="@+id/txtNibbles"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="nibbles" />
+            </LinearLayout>
+           </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_weight="3"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/results_btn_bg">
+                    <TextView
+                        android:id="@+id/txtBytes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:text="" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="bytes" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_weight="3"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/results_btn_bg">
+                    <TextView
+                        android:id="@+id/txtKiloBytes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:text="" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="kilobytes" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="6"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_weight="3"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/results_btn_bg">
+                    <TextView
+                        android:id="@+id/txtMegaBytes"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_height="wrap_content"
+                        android:text="" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="megabytes" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="@dimen/_60sdp"
+                    android:layout_weight="3"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/results_btn_bg">
+                    <TextView
+                        android:id="@+id/txtGigaBytes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:text="" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="gigabytes" />
+                </LinearLayout>
+            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_25sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:padding="@dimen/_5sdp"
+                    android:background="@drawable/results_btn_bg">
+                    <TextView
+                        android:id="@+id/txtTeraBytes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:text="" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="terabytes" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            android:id="@+id/dividerEnd"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            app:layout_constraintTop_toBottomOf="@id/btnLayout"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="#807A7A" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
